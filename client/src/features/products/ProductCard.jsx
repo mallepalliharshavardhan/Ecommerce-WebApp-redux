@@ -1,20 +1,37 @@
+import { useDispatch } from "react-redux";
+import { addToCart } from "../cart/cartSlice.js";
+import {
+  getProductFallbackImageUrl,
+  getProductImageUrl,
+} from "./productImages.js";
+
 function ProductCard({ product }) {
-  const imageUrl = product.image?.startsWith("/")
-    ? `http://localhost:5000${product.image}`
-    : product.image;
+  const dispatch = useDispatch();
+  const fallbackImageUrl = getProductFallbackImageUrl(product.name);
+  const imageUrl = getProductImageUrl(product);
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#202735] transition duration-200 hover:-translate-y-1 hover:border-[#3B82F6]/50 hover:shadow-xl hover:shadow-black/20">
       <div className="relative flex h-56 items-center justify-center overflow-hidden bg-[#191F29] p-6">
-        <span className="text-sm text-[#A1AAB8]">Product image</span>
+        <span className="text-sm text-[#A1AAB8]">Image unavailable</span>
         {imageUrl && (
           <img
             src={imageUrl}
             alt={product.name}
-            className="absolute inset-0 h-full w-full bg-[#191F29] object-contain p-6"
+            className="absolute inset-0 h-full w-full bg-[#191F29] object-contain p-6 "
             loading="lazy"
             onError={(event) => {
-              event.currentTarget.hidden = true;
+              const image = event.currentTarget;
+              if (
+                fallbackImageUrl &&
+                image.dataset.fallbackApplied !== "true" &&
+                image.src !== fallbackImageUrl
+              ) {
+                image.dataset.fallbackApplied = "true";
+                image.src = fallbackImageUrl;
+                return;
+              }
+              image.hidden = true;
             }}
           />
         )}
@@ -35,7 +52,8 @@ function ProductCard({ product }) {
           </p>
           <button
             type="button"
-            className="rounded-lg bg-[#3B82F6] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#60A5FA] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA]"
+            className="rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-semibold text-[#101318] transition-colors hover:bg-amber-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
+            onClick={() => dispatch(addToCart(product))}
           >
             Add to Cart
           </button>
