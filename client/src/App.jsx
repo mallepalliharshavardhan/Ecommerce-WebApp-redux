@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { Link, Route, Routes } from "react-router-dom";
 import CartPage from "./features/cart/CartPage";
+import ProductDetailsPage from "./features/products/ProductDetailsPage";
 import ProductList from "./features/products/ProductList";
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-5 sm:px-8">
           <Link to="/" className="flex items-center gap-3" aria-label="Nexora home">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#3B82F6] text-lg font-bold text-white shadow-lg shadow-blue-500/20">
-              N
+              $
             </span>
             <span className="text-xl font-semibold tracking-tight">GenZ Store</span>
           </Link>
@@ -112,6 +113,7 @@ function App() {
             }
           />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/products/:id" element={<ProductDetailsPage />} />
         </Routes>
       </main>
 

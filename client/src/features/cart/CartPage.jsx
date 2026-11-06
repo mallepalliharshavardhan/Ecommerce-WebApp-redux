@@ -6,10 +6,7 @@ import {
   increaseQuantity,
   removeFromCart,
 } from "./cartSlice.js";
-import {
-  getProductFallbackImageUrl,
-  getProductImageUrl,
-} from "../products/productImages.js";
+import ProductImage from "../products/ProductImage.jsx";
 
 const formatPrice = (price) =>
   new Intl.NumberFormat("en-US", {
@@ -34,7 +31,7 @@ function CartPage() {
             aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
-            className="h-15 w-8"
+            className="h-8 w-8"
           >
             <path
               d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h8.5a2 2 0 0 0 1.9-1.4L21 8H6"
@@ -86,47 +83,16 @@ function CartPage() {
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">
           {items.map((item) => {
-            const fallbackImageUrl = getProductFallbackImageUrl(item.name);
-            const imageUrl = getProductImageUrl(item);
-
             return (
               <article
                 key={item._id}
                 className="flex flex-col gap-5 rounded-2xl border border-white/10 bg-[#202735] p-4 sm:flex-row sm:items-center sm:p-5"
               >
-                <div className="relative flex h-48 w-full shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#191F29] sm:h-36 sm:w-40">
-                  <span
-                    data-image-fallback
-                    hidden={Boolean(imageUrl)}
-                    className="text-xs text-[#A1AAB8]"
-                  >
-                    Image unavailable
-                  </span>
-                  {imageUrl && (
-                    <img
-                      src={imageUrl}
-                      alt={item.name}
-                      className="absolute inset-0 h-full w-full bg-[#191F29] object-contain p-2"
-                      loading="lazy"
-                      onError={(event) => {
-                        const image = event.currentTarget;
-                        if (
-                          fallbackImageUrl &&
-                          image.dataset.fallbackApplied !== "true" &&
-                          image.src !== fallbackImageUrl
-                        ) {
-                          image.dataset.fallbackApplied = "true";
-                          image.src = fallbackImageUrl;
-                          return;
-                        }
-                        image.hidden = true;
-                        image.parentElement
-                          .querySelector("[data-image-fallback]")
-                          ?.removeAttribute("hidden");
-                      }}
-                    />
-                  )}
-                </div>
+                <ProductImage
+                  product={item}
+                  wrapperClassName="h-48 w-full shrink-0 rounded-xl sm:h-36 sm:w-40"
+                  imageClassName="bg-[#191F29] p-2"
+                />
 
                 <div className="flex min-w-0 flex-1 flex-col justify-between gap-4 sm:min-h-28">
                   <div>
